@@ -9,6 +9,7 @@ import users
 import steam_api
 import gener8rs_api
 import teamwork_tf_api
+import backpack_tf_api
 
 # Settings
 REFER_TO_OTHER_USERS_BY_MENTION = False
@@ -182,7 +183,7 @@ async def price(interacion, item: str = None):
 # Routines
 @tasks.loop(hours=24)
 async def update_prices():
-    pass  # TODO
+    backpack_tf_api.reload_prices()
 
 
 @tasks.loop(minutes=10)
