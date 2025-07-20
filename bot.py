@@ -72,11 +72,11 @@ async def playtime(interaction, playername: str = None):
 
 
 @tree.command(
-    name="playtime-all",
+    name="playtimes",
     description="Get the playtime for all players",
     guild=discord.Object(id=GUILD_ID)
 )
-async def playtimeall(interaction):
+async def playtimes(interaction):
     msg = "**Playtime of all players:**"
     users = users.load_users()
     for user in users:
