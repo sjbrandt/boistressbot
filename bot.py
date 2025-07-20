@@ -90,7 +90,7 @@ async def loadouts(interaction, count: int = None):
     await interaction.response.send_message(f"Fetching {fmsg} loadouts...")
 
     for i in range(0, count):
-        loadout = gener8rs_api.random_loadout()  # No idea why I have to name the file here
+        loadout = gener8rs_api.random_loadout()
 
         _class = loadout['_sChosenClass']
         primary = loadout['_sPrimary']
