@@ -167,6 +167,24 @@ async def compactivity(interaction, count: int = None):
     await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
 
 
+@tree.command(
+    name="price",
+    description="Get price of a given item",
+    guild=discord.Object(id=GUILD_ID)
+)
+@app_commands.describe(
+    item="Name of the given item"
+)
+async def price(interacion, item: str = None):
+    pass  # TODO
+
+
+# Routines
+@tasks.loop(hours=24)
+async def update_prices():
+    pass  # TODO
+
+
 @tasks.loop(minutes=10)
 async def update_player_playtimes():
     channel = await client.fetch_channel(GENERAL_CHANNEL_ID)
