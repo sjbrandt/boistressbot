@@ -6,4 +6,4 @@ services:
     volumes:
       - ./data:/data
     env_file:
-      - .env
+      - .dev.env
