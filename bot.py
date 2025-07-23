@@ -72,6 +72,22 @@ async def playtime(interaction, playername: str = None):
 
 
 @tree.command(
+    name="playtimes",
+    description="Get the playtime for all players",
+    guild=discord.Object(id=GUILD_ID)
+)
+async def playtimes(interaction):
+    msg = "## Playtime of all players\n"
+    
+    for user in users.load_users():
+        name = user['discord_username']
+        playtime = user['registered_hours']
+        msg += f"* **{name}**: {playtime} hrs\n"
+    
+    await interaction.response.send_message(msg)
+
+
+@tree.command(
     name="loadouts",
     description="Generate random loadouts for random classes",
     guild=discord.Object(id=GUILD_ID)
@@ -160,11 +176,14 @@ async def stat(interaction, stat: str, playername: str = None):
 )
 async def compactivity(interaction, count: int = None):
     data = teamwork_tf_api.get_comp_activity()
-    players = data['players']
-    servers = data['servers_non_empty']
-    date = data['created_at']
+    try:
+        players = data['players']
+        servers = data['servers_non_empty']
+        date = data['created_at']
 
-    await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
+        await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
+    except Exception as e:
+        on_error(interaction, discord.app_commands.AppCommandError)
 
 
 @tree.command(
