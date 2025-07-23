@@ -77,11 +77,12 @@ async def playtime(interaction, playername: str = None):
     guild=discord.Object(id=GUILD_ID)
 )
 async def playtimes(interaction):
-    msg = "**Playtime of all players:**"
+    msg = "## Playtime of all players\n"
+    
     for user in users.load_users():
         name = user['discord_username']
         playtime = user['registered_hours']
-        msg += f"* {name}: {playtime}\n"
+        msg += f"* **{name}**: {playtime}\n"
     
     await interaction.response.send_message(msg)
 
