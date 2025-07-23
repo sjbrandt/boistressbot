@@ -78,8 +78,7 @@ async def playtime(interaction, playername: str = None):
 )
 async def playtimes(interaction):
     msg = "**Playtime of all players:**"
-    users = users.load_users()
-    for user in users:
+    for user in users.load_users():
         name = user['discord_username']
         playtime = user['registered_hours']
         msg += f"* {name}: {playtime}\n"
