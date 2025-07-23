@@ -167,6 +167,40 @@ async def compactivity(interaction, count: int = None):
     await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
 
 
+@tree.command(
+    name="classtimes",
+    description="Get class playtimes for the given player",
+    guild=discord.Object(id=GUILD_ID)
+)
+@app_commands.describe(
+    player="Player for which to get the class playtimes"
+)
+@app_commands.choices(player=[
+    app_commands.Choice(name="Sofus", value="toastysauze"),
+    app_commands.Choice(name="Gustav", value="mallow_opus"),
+    app_commands.Choice(name="Philip", value="pvcolsen"),
+    app_commands.Choice(name="Mathias", value="mathiasnova"),
+    app_commands.Choice(name="Thorvald", value="mistralextra"),
+    app_commands.Choice(name="Adrian", value="thewildcards")
+])
+async def classtimes(interaction, player: app_commands.Choice[str]):
+    playername = player.value
+    steam_id = users.steam_id_from_discord_username(playername)
+    
+    class_playtimes = steam_api.get_class_playtimes(steam_id)
+    class_playtimes_sorted = dict(sorted(
+        class_playtimes.items(),
+        key=lambda item: item[1],
+        reverse=True
+    ))
+    
+    msg = f"## Class playtimes for {playername}\n"
+    for _class in class_playtimes_sorted:
+        msg += f"1. **{_class}** - {class_playtimes[_class]} hrs\n"
+    
+    await interaction.response.send_message(msg)
+
+
 @tasks.loop(minutes=10)
 async def update_player_playtimes():
     channel = await client.fetch_channel(GENERAL_CHANNEL_ID)
