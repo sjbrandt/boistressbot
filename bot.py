@@ -241,6 +241,7 @@ async def classtimes(interaction, player: app_commands.Choice[str]):
     await interaction.response.send_message(msg)
 
 
+@verify()
 @tree.command(
     name="price",
     description="Get price of a given item",
