@@ -17,6 +17,7 @@ REFER_TO_OTHER_USERS_BY_MENTION = False
 GUILD_ID = int(os.getenv('GUILD_ID'))
 CREATOR_DISCORD_ID = int(os.getenv('CREATOR_DISCORD_ID'))
 GENERAL_CHANNEL_ID = int(os.getenv('GENERAL_CHANNEL_ID'))
+BOT_COMMANDS_CHANNEL_ID = int(os.getenv('BOT_COMMANDS_CHANNEL_ID'))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -25,8 +26,20 @@ client = discord.Client(intents=intents)
 
 tree = app_commands.CommandTree(client)
 
+def verify():
+    async def predicate(interaction: discord.Interaction) -> bool:
+        if interaction.channel_id != BOT_COMMANDS_CHANNEL_ID:
+            await interaction.response.send_message(
+                f":point_right: <#{BOT_COMMANDS_CHANNEL_ID}>",
+                ephemeral=True
+            )
+            return False
+        return True
+    return app_commands.check(predicate)
+
 
 # Commands
+@verify()
 @tree.command(
     name="hello",
     description="Social convention of acknowledgement",
@@ -36,6 +49,7 @@ async def hello_command(interaction):
     await interaction.response.send_message(f"Hello {interaction.user.mention}!")
 
 
+@verify()
 @tree.command(
     name="github",
     description="Get link to my GitHub repository!",
@@ -45,6 +59,7 @@ async def github_command(interaction):
     await interaction.response.send_message("Here ya go!\nhttps://github.com/sofusbrandt/BoistressBot")
 
 
+@verify()
 @tree.command(
     name="playtime",
     description="Get the playtime for yourself or the given player",
@@ -71,6 +86,7 @@ async def playtime(interaction, playername: str = None):
     await interaction.response.send_message(f"Player {player_reference} has played Team Fortress 2 for {hours} hours!")
 
 
+@verify()
 @tree.command(
     name="playtimes",
     description="Get the playtime for all players",
@@ -87,6 +103,7 @@ async def playtimes(interaction):
     await interaction.response.send_message(msg)
 
 
+@verify()
 @tree.command(
     name="loadouts",
     description="Generate random loadouts for random classes",
@@ -128,6 +145,7 @@ async def loadouts(interaction, count: int = None):
     await interaction.edit_original_response(content=message)
 
 
+@verify()
 @tree.command(
     name="stathelp",
     description="Get list of available stats to fetch using the /stats command",
@@ -169,6 +187,7 @@ async def stat(interaction, stat: str, playername: str = None):
     await interaction.response.send_message(f"{playername} - `{stat}` = {stat_result}")
 
 
+@verify()
 @tree.command(
     name="comp-activity",
     description="Get amount of active games and players in valve competitive",
@@ -186,6 +205,7 @@ async def compactivity(interaction, count: int = None):
         on_error(interaction, discord.app_commands.AppCommandError)
 
 
+@verify()
 @tree.command(
     name="classtimes",
     description="Get class playtimes for the given player",
@@ -238,6 +258,9 @@ async def update_player_playtimes():
 # Error handling
 @tree.error
 async def on_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
+    # app_commands check failure, from verify() which has already responded
+    if isinstance(error, discord.app_commands.CheckFailure):
+        return
     message = "Whoops, I had an error! Let me call my boss for a second...\n\n"
     message += f"<@{CREATOR_DISCORD_ID}> hey dickface! ur a dumbfuck!\n\n"
     message += f"```{error}```"
