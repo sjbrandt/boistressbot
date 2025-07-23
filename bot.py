@@ -73,6 +73,22 @@ async def playtime(interaction, playername: str = None):
 
 
 @tree.command(
+    name="playtimes",
+    description="Get the playtime for all players",
+    guild=discord.Object(id=GUILD_ID)
+)
+async def playtimes(interaction):
+    msg = "## Playtime of all players\n"
+    
+    for user in users.load_users():
+        name = user['discord_username']
+        playtime = user['registered_hours']
+        msg += f"* **{name}**: {playtime} hrs\n"
+    
+    await interaction.response.send_message(msg)
+
+
+@tree.command(
     name="loadouts",
     description="Generate random loadouts for random classes",
     guild=discord.Object(id=GUILD_ID)
@@ -161,11 +177,48 @@ async def stat(interaction, stat: str, playername: str = None):
 )
 async def compactivity(interaction, count: int = None):
     data = teamwork_tf_api.get_comp_activity()
-    players = data['players']
-    servers = data['servers_non_empty']
-    date = data['created_at']
+    try:
+        players = data['players']
+        servers = data['servers_non_empty']
+        date = data['created_at']
 
-    await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
+        await interaction.response.send_message(f"Valve competitive matchmaking currently has **{players} players** in **{servers} servers**\n_as of {date}_")
+    except Exception as e:
+        on_error(interaction, discord.app_commands.AppCommandError)
+
+
+@tree.command(
+    name="classtimes",
+    description="Get class playtimes for the given player",
+    guild=discord.Object(id=GUILD_ID)
+)
+@app_commands.describe(
+    player="Player for which to get the class playtimes"
+)
+@app_commands.choices(player=[
+    app_commands.Choice(name="Sofus", value="toastysauze"),
+    app_commands.Choice(name="Gustav", value="mallow_opus"),
+    app_commands.Choice(name="Philip", value="pvcolsen"),
+    app_commands.Choice(name="Mathias", value="mathiasnova"),
+    app_commands.Choice(name="Thorvald", value="mistralextra"),
+    app_commands.Choice(name="Adrian", value="thewildcards")
+])
+async def classtimes(interaction, player: app_commands.Choice[str]):
+    playername = player.value
+    steam_id = users.steam_id_from_discord_username(playername)
+    
+    class_playtimes = steam_api.get_class_playtimes(steam_id)
+    class_playtimes_sorted = dict(sorted(
+        class_playtimes.items(),
+        key=lambda item: item[1],
+        reverse=True
+    ))
+    
+    msg = f"## Class playtimes for {playername}\n"
+    for _class in class_playtimes_sorted:
+        msg += f"1. **{_class}** - {class_playtimes[_class]} hrs\n"
+    
+    await interaction.response.send_message(msg)
 
 
 @tree.command(
