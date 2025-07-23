@@ -1,0 +1,9 @@
+services:
+  discord-bot:
+    build: .
+    container_name: boistressbot
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    env_file:
+      - .dev.env
