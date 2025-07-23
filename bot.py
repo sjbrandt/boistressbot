@@ -82,7 +82,7 @@ async def playtimes(interaction):
     for user in users.load_users():
         name = user['discord_username']
         playtime = user['registered_hours']
-        msg += f"* **{name}**: {playtime}\n"
+        msg += f"* **{name}**: {playtime} hrs\n"
     
     await interaction.response.send_message(msg)
 
