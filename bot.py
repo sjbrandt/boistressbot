@@ -65,10 +65,19 @@ async def github_command(interaction):
     description="Get the playtime for yourself or the given player",
     guild=discord.Object(id=GUILD_ID)
 )
-@app_commands.describe(playername="Discord username or @mention of the player, or blank to use yourself")
-async def playtime(interaction, playername: str = None):
-    if playername is None:
-        playername = interaction.user.name
+@app_commands.describe(
+    player="Player for which to get the class playtimes"
+)
+@app_commands.choices(player=[
+    app_commands.Choice(name="Sofus", value="toastysauze"),
+    app_commands.Choice(name="Gustav", value="mallow_opus"),
+    app_commands.Choice(name="Philip", value="pvcolsen"),
+    app_commands.Choice(name="Mathias", value="mathiasnova"),
+    app_commands.Choice(name="Thorvald", value="mistralextra"),
+    app_commands.Choice(name="Adrian", value="thewildcards")
+])
+async def playtime(interaction, player: app_commands.Choice[str] = None):
+    playername = interaction.user.name if player is None else player.value
 
     if re.compile("<@[0-9]+>").match(playername):  # mention is used instead of username
         member = await interaction.guild.fetch_member(playername[2:-1])
@@ -222,8 +231,9 @@ async def compactivity(interaction, count: int = None):
     app_commands.Choice(name="Thorvald", value="mistralextra"),
     app_commands.Choice(name="Adrian", value="thewildcards")
 ])
-async def classtimes(interaction, player: app_commands.Choice[str]):
-    playername = player.value
+async def classtimes(interaction, player: app_commands.Choice[str] = None):
+    playername = interaction.user.name if player is None else player.value
+    
     steam_id = users.steam_id_from_discord_username(playername)
     
     class_playtimes = steam_api.get_class_playtimes(steam_id)
