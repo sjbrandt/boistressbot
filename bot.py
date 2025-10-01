@@ -56,7 +56,7 @@ async def hello_command(interaction):
     guild=discord.Object(id=GUILD_ID)
 )
 async def github_command(interaction):
-    await interaction.response.send_message("Here ya go!\nhttps://github.com/sofusbrandt/BoistressBot")
+    await interaction.response.send_message("Here ya go!\nhttps://github.com/sjbrandt/boistressbot")
 
 
 @verify()
