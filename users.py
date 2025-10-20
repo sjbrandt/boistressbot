@@ -1,5 +1,7 @@
 import json
 
+from discord import app_commands
+
 
 def steam_id_from_discord_username(discord_username: str):
     users = load_users()
@@ -53,3 +55,12 @@ def update_registered_playtime(id_or_username: int | str, hours: int):
         if id_match(id_or_username, user):
             user['registered_hours'] = hours
     save_users(users)
+
+
+def generate_choices():
+    choices = []
+    for user in load_users():
+        choices.append(app_commands.Choice(name=user['name'], value=user['discord_username']))
+    
+    return choices
+
