@@ -161,7 +161,7 @@ async def loadouts(interaction, count: int = None):
     guild=discord.Object(id=GUILD_ID)
 )
 async def stathelp(interaction):
-    link = "https://github.com/sofusbrandt/BoistressBot/blob/dev/stats_list.txt"
+    link = "https://github.com/sjbrandt/BoistressBot/blob/dev/stats_list.txt"
     await interaction.response.send_message(f"[List of available stats for /stat]({link})")
 
 
