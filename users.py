@@ -64,3 +64,9 @@ def generate_choices():
     
     return choices
 
+
+def generate_name_list():
+    names = []
+    for user in load_users():
+        names.append(user['name'])
+    return names
