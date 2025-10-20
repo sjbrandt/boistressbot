@@ -68,14 +68,7 @@ async def github_command(interaction):
 @app_commands.describe(
     player="Player for which to get the class playtimes"
 )
-@app_commands.choices(player=[
-    app_commands.Choice(name="Sofus", value="toastysauze"),
-    app_commands.Choice(name="Gustav", value="mallow_opus"),
-    app_commands.Choice(name="Philip", value="pvcolsen"),
-    app_commands.Choice(name="Mathias", value="mathiasnova"),
-    app_commands.Choice(name="Thorvald", value="mistralextra"),
-    app_commands.Choice(name="Adrian", value="thewildcards")
-])
+@app_commands.choices(player=users.generate_choices())
 async def playtime(interaction, player: app_commands.Choice[str] = None):
     playername = interaction.user.name if player is None else player.value
 
@@ -120,7 +113,7 @@ async def playtimes(interaction):
 )
 @app_commands.describe(count="Amount of loadouts to generate. Leave blank for 6 named loadouts.")
 async def loadouts(interaction, count: int = None):
-    persons = ['Sofus', 'Adrian', 'Gustav', 'Philip', 'Thorvald', 'Mathias']
+    persons = users.generate_name_list()
     message = "## Random loadouts\n"
     use_names = False
 
@@ -223,14 +216,7 @@ async def compactivity(interaction, count: int = None):
 @app_commands.describe(
     player="Player for which to get the class playtimes"
 )
-@app_commands.choices(player=[
-    app_commands.Choice(name="Sofus", value="toastysauze"),
-    app_commands.Choice(name="Gustav", value="mallow_opus"),
-    app_commands.Choice(name="Philip", value="pvcolsen"),
-    app_commands.Choice(name="Mathias", value="mathiasnova"),
-    app_commands.Choice(name="Thorvald", value="mistralextra"),
-    app_commands.Choice(name="Adrian", value="thewildcards")
-])
+@app_commands.choices(player=users.generate_choices)
 async def classtimes(interaction, player: app_commands.Choice[str] = None):
     playername = interaction.user.name if player is None else player.value
     
