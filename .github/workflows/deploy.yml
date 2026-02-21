@@ -21,7 +21,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
+          port: ${{ secrets.DEPLOY_PORT }}
           script: |  # todo: add cloning + creating .env from secrets
             git checkout main
             git pull
