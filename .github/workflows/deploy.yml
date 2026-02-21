@@ -23,6 +23,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |  # todo: add cloning + creating .env from secrets
+            cd BoistressBot
             git checkout main
             git pull
             docker compose down -v
