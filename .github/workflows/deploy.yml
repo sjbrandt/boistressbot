@@ -15,23 +15,6 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
-      - name: Wait for Tailscale tag propagation
-        run: |
-          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-          echo "Waiting for tag..."
-          sleep 2
-          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-          echo "Waiting for tag..."
-          sleep 2
-          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-          echo "Waiting for tag..."
-          sleep 2
-          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-          echo "Waiting for tag..."
-          sleep 2
-          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-          echo "Waiting for tag..."
-          sleep 2
       - name: SSH actions
         uses: appleboy/ssh-action@v1.2.5
         with:
