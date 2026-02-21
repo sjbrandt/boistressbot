@@ -17,11 +17,21 @@ jobs:
           tags: tag:ci
       - name: Wait for Tailscale tag propagation
         run: |
-          for i in {1..10}; do
-            tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
-            echo "Waiting for tag..."
-            sleep 2
-          done
+          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
+          echo "Waiting for tag..."
+          sleep 2
+          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
+          echo "Waiting for tag..."
+          sleep 2
+          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
+          echo "Waiting for tag..."
+          sleep 2
+          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
+          echo "Waiting for tag..."
+          sleep 2
+          tailscale status --json | jq '.Self.Tags | index("tag:ci")' && break
+          echo "Waiting for tag..."
+          sleep 2
       - name: SSH actions
         uses: appleboy/ssh-action@v1.2.5
         with:
