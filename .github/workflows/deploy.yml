@@ -24,10 +24,17 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          script: |  # todo: add cloning + creating .env from secrets
+          script: |
+            if [ -d boistressbot ]; then
+              cd boistressbot
+              docker compose down -v
+              cd ..
+            fi
+
             rm -rf ~/${{ github.event.repository.name }}
             git clone git@github.com:${{ github.repository }}.git
 
+            cd ${{ github.event.repository.name }}
             touch .env
             echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN}} >> .env
             echo GUILD_ID=${{ secrets.GUILD_ID}} >> .env
@@ -37,8 +44,4 @@ jobs:
             echo GENERAL_CHANNEL_ID=${{ secrets.GENERAL_CHANNEL_ID}} >> .env
             echo BOT_COMMANDS_CHANNEL_ID=${{ secrets.BOT_COMMANDS_CHANNEL_ID}} >> .env
 
-            cd ${{ github.event.repository.name }}
-            git checkout main
-            git pull
-            docker compose down -v
             docker compose up -d
