@@ -16,6 +16,7 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
           ping: ${{ secrets.DEPLOY_HOST }}
+
       - name: SSH actions
         uses: appleboy/ssh-action@v1.2.5
         with:
