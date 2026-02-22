@@ -4,6 +4,6 @@ services:
     container_name: boistressbot
     restart: unless-stopped
     volumes:
-      - ./data:/data
+      - ${HOME}/boistressbot_data:/data
     env_file:
       - .env

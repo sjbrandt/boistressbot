@@ -24,9 +24,24 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          script: |  # todo: add cloning + creating .env from secrets
-            cd BoistressBot
-            git checkout main
-            git pull
-            docker compose down -v
+          script: |
+            if [ -d ~/${{ github.event.repository.name }} ]; then
+              cd ~/${{ github.event.repository.name }}
+              docker compose down -v
+              cd ~
+            fi
+
+            rm -rf ~/${{ github.event.repository.name }}
+            git clone https://${{ secrets._GITHUB_PAT }}@github.com/${{ github.repository }}.git
+
+            cd ~/${{ github.event.repository.name }}
+            touch .env
+            echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN}} >> .env
+            echo GUILD_ID=${{ secrets.GUILD_ID}} >> .env
+            echo CREATOR_DISCORD_ID=${{ secrets.CREATOR_DISCORD_ID}} >> .env
+            echo CREATOR_STEAM_ID=${{ secrets.CREATOR_STEAM_ID}} >> .env
+            echo STEAM_API_KEY=${{ secrets.STEAM_API_KEY}} >> .env
+            echo GENERAL_CHANNEL_ID=${{ secrets.GENERAL_CHANNEL_ID}} >> .env
+            echo BOT_COMMANDS_CHANNEL_ID=${{ secrets.BOT_COMMANDS_CHANNEL_ID}} >> .env
+
             docker compose up -d
