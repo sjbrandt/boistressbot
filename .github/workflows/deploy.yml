@@ -32,7 +32,7 @@ jobs:
             fi
 
             rm -rf ~/${{ github.event.repository.name }}
-            git clone git@github.com:${{ github.repository }}.git
+            git clone https://${{ secrets._GITHUB_PAT }}@github.com/${{ github.repository }}.git
 
             cd ~/${{ github.event.repository.name }}
             touch .env
