@@ -25,8 +25,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
-            if [ -d boistressbot ]; then
-              cd boistressbot
+            if [ -d ${{ github.event.repository.name }} ]; then
+              cd ${{ github.event.repository.name }}
               docker compose down -v
               cd ..
             fi
