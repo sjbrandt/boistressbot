@@ -25,8 +25,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |  # todo: add cloning + creating .env from secrets
-            #rm -rf ~/${{ github.event.repository.name }}  # commented out becasue data/users.json is not safe yet
-            #git clone git@github.com:${{ github.repository }}.git
+            rm -rf ~/${{ github.event.repository.name }}
+            git clone git@github.com:${{ github.repository }}.git
 
             touch .env
             echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN}} >> .env
